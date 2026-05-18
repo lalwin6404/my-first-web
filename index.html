@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>三國群英・期末通關戰略網頁 人文沙盤與解憂終極版</title>
+    <!-- 引入 FontAwesome 圖標 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <style>
+        :root {
+            --primary-gold: #d4af37;
+            --wei-blue: #2e86de;
+            --shu-red: #ee5253;
+            --wu-green: #10ac84;
+            --bg-dark: #121212;
+            --card-bg: #1e1e1e;
+            --text-light: #e0e0e0;
+            --accent-orange: #ff9f43;
+            --sand-map-bg: #16161a;
+            --calm-teal: #00d2d3;
+        }
+
+        body {
+            font-family: 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            margin: 0;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        header {
+            text-align: center;
+            padding: 25px 20px;
+            border-bottom: 3px solid var(--primary-gold);
+            background: linear-gradient(180deg, #222, #121212);
+            margin-bottom: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+
+        header h1 {
+            color: var(--primary-gold);
+            margin: 0 0 10px 0;
+            font-size: 2.6rem;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.8);
+            letter-spacing: 2px;
+        }
+
+        header p {
+            font-style: italic;
+            color: #b0b0b0;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1500px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .container { grid-template-columns: 1fr; }
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+            transition: border-color 0.3s;
+        }
+
+        h2 {
+            color: var(--primary-gold);
+            border-left: 5px solid var(--primary-gold);
+            padding-left: 12px;
+            margin-top: 0;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* === 進度管理區塊 === */
+        .progress-section .kingdom-row {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: 8px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid #2a2a2a;
+        }
+
+        .wei { border-top: 4px solid var(--wei-blue); }
+        .shu { border-top: 4px solid var(--shu-red); }
+        .wu { border-top: 4px solid var(--wu-green); }
+
+        .kingdom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .kingdom-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        .wei .kingdom-title { color: #54a0ff; }
+        .shu .kingdom-title { color: #ff6b6b; }
+        .wu .kingdom-title { color: #1dd1a1; }
+
+        .progress-bar-bg {
+            background-color: #333;
+            border-radius: 10px;
+            overflow: hidden;
+            height: 16px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease-out;
+        }
+
+        .wei .progress-bar-fill { background: linear-gradient(90deg, #2e86de, #54a0ff); }
+        .shu .progress-bar-fill { background: linear-gradient(90deg, #ee5253, #ff6b6b); }
+        .wu .progress-bar-fill { background: linear-gradient(90deg, #10ac84, #1dd1a1); }
+
+        .sub-phase {
+            margin-top: 15px;
+            background: rgba(255,255,255,0.03);
+            padding: 12px;
+            border-radius: 6px;
+        }
+
+        .sub-phase-title {
+            font-size: 0.95rem;
+            color: var(--primary-gold);
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        .checkbox-list {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+
+        .checkbox-list label {
+            font-size: 0.9rem;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            color: #ccc;
+            transition: color 0.2s;
+        }
+
+        .checkbox-list label:hover { color: #fff; }
+
+        .checkbox-list input {
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+
+        /* === 綜合情境應用與沙盤推演 === */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* 沙盤地圖樣式 */
+        .sand-table-card {
+            background-color: var(--sand-map-bg);
+            border: 1px solid #3c4043;
+            position: relative;
+            padding: 15px;
+        }
+
+        .sand-table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #333;
+            padding-bottom: 8px;
+        }
+
+        .sand-table-title {
+            color: var(--primary-gold);
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* 戰役導覽盤 */
+        .tab-bar {
+            display: flex;
+            overflow-x: auto;
+            gap: 5px;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            scrollbar-width: thin;
+            scrollbar-color: #444 #1e1e1e;
+        }
+
+        .tab-bar::-webkit-scrollbar {
+            height: 4px;
+        }
+        .tab-bar::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 2px;
+        }
+
+        .tab-btn {
+            background-color: #222;
+            color: #aaa;
+            border: 1px solid #444;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            border-color: var(--primary-gold);
+            color: #fff;
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary-gold);
+            color: #000;
+            border-color: var(--primary-gold);
+            font-weight: bold;
+        }
+
+        .sand-table-map {
+            width: 100%;
+            height: 380px;
+            background: radial-gradient(circle, #1e1e24 0%, #0d0d11 100%);
+            border-radius: 6px;
+            border: 1px solid #2c2c35;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* SVG 行軍動態虛線與動畫 */
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .river {
+            fill: none;
+            stroke: #224466;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 0.7;
+        }
+
+        .march-line {
+            fill: none;
+            stroke-width: 3;
+            stroke-dasharray: 8, 4;
+            animation: march-animation 1.5s linear infinite;
+        }
+
+        .march-line.wei-march { stroke: #54a0ff; }
+        .march-line.shu-march { stroke: #ff6b6b; }
+        .march-line.wu-march { stroke: #1dd1a1; }
+        .march-line.special-march { stroke: var(--accent-orange); }
+
+        @keyframes march-animation {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+
+        .city-node {
+            fill: #1a1a1a;
+            stroke: var(--primary-gold);
+            stroke-width: 2;
+        }
+
+        .city-label {
+            fill: #b0b0b0;
+            font-size: 12px;
+            font-family: sans-serif;
+            text-shadow: 1px 1px 2px #000;
+        }
+
+        .clash-point {
+            fill: #ff2a2a;
+            animation: pulse-clash 1s infinite alternate;
+        }
+
+        @keyframes pulse-clash {
+            0% { r: 6; opacity: 0.5; }
+            100% { r: 12; opacity: 1; }
+        }
+
+        .territory-label {
+            font-size: 18px;
+            font-weight: bold;
+            opacity: 0.25;
+            text-shadow: 2px 2px 4px #000;
+        }
+
+        /* 戰術說明框 */
+        .sand-table-desc-box {
+            margin-top: 10px;
+            background-color: rgba(0,0,0,0.5);
+            border-left: 3px solid var(--accent-orange);
+            padding: 10px 15px;
+            font-size: 0.85rem;
+            color: #ccc;
+            border-radius: 0 4px 4px 0;
+            min-height: 50px;
+        }
+
+        /* 戰術圖例說明 */
+        .map-legend {
+            display: flex;
+            gap: 15px;
+            font-size: 0.8rem;
+            color: #aaa;
+            margin-top: 10px;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        /* 答題情境框 */
+        .scenario-section .battle-box {
+            background: linear-gradient(135deg, #252525, #151515);
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 25px;
+        }
+
+        .battle-box.active-border {
+            border-color: var(--primary-gold);
+        }
+
+        .battle-nav {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .battle-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #444;
+            padding-bottom: 10px;
+        }
+
+        .battle-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #cdcdcd;
+            margin-bottom: 20px;
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid var(--primary-gold);
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 12px;
+            background-color: #2a2a2a;
+            color: #e0e0e0;
+            border: 1px solid #444;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .option-btn:hover {
+            background-color: #3a3a3a;
+            border-color: var(--accent-orange);
+            color: #fff;
+        }
+
+        #feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .success { background-color: rgba(46, 204, 113, 0.15); border: 1px solid #2ecc71; color: #2ecc71; }
+        .failure { background-color: rgba(231, 76, 60, 0.15); border: 1px solid #e74c3c; color: #e74c3c; }
+
+        .next-btn {
+            background-color: var(--primary-gold);
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            font-weight: bold;
+            font-size: 0.95rem;
+            border-radius: 5px;
+            cursor: pointer;
+            float: right;
+            margin-top: 15px;
+            display: none;
+            transition: background 0.2s;
+        }
+        
+        .next-btn:hover { background-color: #f1c40f; }
+
+        /* 全局總評分 */
+        .score-board {
+            grid-column: 1 / -1;
+            text-align: center;
+            background: linear-gradient(90deg, #1e1e1e, #2d2d2d, #1e1e1e);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--primary-gold);
+            font-size: 1.25rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .score-board span { color: var(--accent-orange); font-weight: bold; }
+
+        /* === 考前解憂草堂樣式 === */
+        .stress-relief-section {
+            grid-column: 1 / -1;
+            margin-top: 30px;
+            background-color: var(--card-bg);
+            border: 1px solid var(--primary-gold);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+        }
+
+        .stress-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 1024px) {
+            .stress-grid { grid-template-columns: 1fr; }
+        }
+
+        .stress-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stress-card h3 {
+            color: var(--primary-gold);
+            margin-top: 0;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* 木魚樣式 */
+        .muyu-container {
+            position: relative;
+            cursor: pointer;
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .muyu-img {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, #5e3b15 0%, #2e1c0a 100%);
+            border: 4px solid var(--primary-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.5);
+            transition: transform 0.05s ease-out;
+            position: relative;
+        }
+
+        .muyu-img::after {
+            content: "木魚";
+            color: var(--primary-gold);
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .muyu-stick {
+            position: absolute;
+            width: 12px;
+            height: 60px;
+            background: #d4af37;
+            border-radius: 6px;
+            top: 20px;
+            right: 10px;
+            transform-origin: bottom center;
+            transform: rotate(30deg);
+            transition: transform 0.05s;
+        }
+
+        .float-text {
+            position: absolute;
+            color: var(--primary-gold);
+            font-weight: bold;
+            font-size: 16px;
+            pointer-events: none;
+            animation: floatUp 0.8s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-80px) scale(1.2); opacity: 0; }
+        }
+
+        /* 錦囊樣式 */
+        .pouch-row {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .pouch-btn {
+            background: linear-gradient(135deg, #a71d1d 0%, #610c0c 100%);
+            border: 2px solid var(--primary-gold);
+            border-radius: 6px;
+            color: #fff;
+            padding: 10px 14px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            flex: 1;
+        }
+
+        .pouch-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        #pouch-content {
+            width: 100%;
+            background: rgba(0,0,0,0.6);
+            border: 1px dashed var(--primary-gold);
+            border-radius: 6px;
+            padding: 12px;
+            font-size: 0.9rem;
+            min-height: 80px;
+            color: #e0e0e0;
+            text-align: left;
+            line-height: 1.6;
+        }
+
+        /* 吐納練習樣式 */
+        .breathing-ring-container {
+            width: 140px;
+            height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin: 10px 0;
+        }
+
+        .breathing-ring {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: rgba(0, 210, 243, 0.15);
+            border: 4px solid var(--calm-teal);
+            box-shadow: 0 0 20px rgba(0, 210, 243, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--calm-teal);
+            font-size: 1rem;
+            transition: transform 4s cubic-bezier(0.4, 0, 0.2, 1), background-color 4s;
+        }
+
+        .breathing-instructions {
+            font-size: 0.9rem;
+            color: #b0b0b0;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>三國群英・期末通關戰略網頁 人文沙盤與解憂終極版</h1>
+        <p>「三分定乾坤，九法制大考。集動態自由沙盤與解憂草堂，助汝直登金榜 A+！」</p>
+    </header>
+
+    <div class="container">
+
+        <!-- 總體戰況 -->
+        <div class="score-board">
+            軍師戰略總評級：<span id="strategist-rank">初出茅廬 (修煉進度: 0%)</span>
+        </div>
+
+        <!-- 一、左縱隊：進度管理區塊（去數學化、人文歷史學科化） -->
+        <div class="card progress-section">
+            <h2><i class="fa-solid fa-square-poll-horizontal"></i> 三分天下・九大歷史戰略進度管理</h2>
+            <p style="color: #aaa; font-size: 0.85rem; margin-bottom: 20px;">大範圍考試需步步為營。請依序完成以下史料觀念建構與分析任務，擴大歷史論證版圖：</p>
+            
+            <!-- 曹魏陣營：核心理論根基 -->
+            <div class="kingdom-row wei">
+                <div class="kingdom-header">
+                    <span class="kingdom-title"><i class="fa-solid fa-crown"></i> 【曹魏陣營】史料與觀念（攻佔中原）</span>
+                    <span id="wei-percent" style="font-weight: bold;">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="wei-bar"></div>
+                </div>
+                
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第一階段：基本定義與史料範疇（許昌築基）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="wei-cb" onclick="updateProgress()"> 徹底釐清各章節「前言與核心定義」，不放過任何關鍵字與歷史名詞。</label>
+                        <label><input type="checkbox" class="wei-cb" onclick="updateProgress()"> 整理重要歷史人物背景、事件導因、文獻註解及容易混淆的歷史脈絡。</label>
+                    </div>
+                </div>
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第二階段：論點邏輯與因果論證（官渡對峙）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="wei-cb" onclick="updateProgress()"> 嘗試「徒手梳理」核心歷史事件的發展因果關係鏈，確保前後邏輯通順。</label>
+                        <label><input type="checkbox" class="wei-cb" onclick="updateProgress()"> 橫向比較不同學派、史觀或政策的適用環境與立論差異。</label>
+                    </div>
+                </div>
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第三階段：基礎範例與史料解析（統治北方）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="wei-cb" onclick="updateProgress()"> 嘗試自主默寫重要年代與事件發展軸，對照解答找出思維盲區。</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 蜀漢陣營：錯題與真題特訓 -->
+            <div class="kingdom-row shu">
+                <div class="kingdom-header">
+                    <span class="kingdom-title"><i class="fa-solid fa-shield-halved"></i> 【蜀漢陣營】真題與申論錯題（割據西蜀）</span>
+                    <span id="shu-percent" style="font-weight: bold;">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="shu-bar"></div>
+                </div>
+                
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第四階段：歷屆試題縱向剖析（隆中對策）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="shu-cb" onclick="updateProgress()"> 限時完成近 3 ~ 5 年期末考古題與模擬題，適應大題寫作的時間分配壓力。</label>
+                        <label><input type="checkbox" class="shu-cb" onclick="updateProgress()"> 分析歷屆題目的「出題題型分佈」，抓出每年必考的高比重核心考點。</label>
+                    </div>
+                </div>
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第五階段：觀念覆盤與論述糾錯（痛失荊州）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="shu-cb" onclick="updateProgress()"> 收集平時考與作業中「因史觀或觀念混淆」失分的問題，標出盲點。</label>
+                        <label><input type="checkbox" class="shu-cb" onclick="updateProgress()"> 針對常錯的概念與論述盲區進行「多次變形申論或情境演練」，直到熟稔。</label>
+                    </div>
+                </div>
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第六階段：高階申論與觀點延伸（白帝託孤）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="shu-cb" onclick="updateProgress()"> 挑戰高難度或開放式申論題，訓練多元論點並立的答題與解套能力。</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 東吳陣營：跨章節聯網整合 -->
+            <div class="kingdom-row wu">
+                <div class="kingdom-header">
+                    <span class="kingdom-title"><i class="fa-solid fa-signs-post"></i> 【東吳陣營】聯網整合與歷史思維（盤踞江東）</span>
+                    <span id="wu-percent" style="font-weight: bold;">0%</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="wu-bar"></div>
+                </div>
+                
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第七階段：知識網絡建立（聯蜀抗曹）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="wu-cb" onclick="updateProgress()"> 繪製「跨章節歷史思維導圖」，用箭頭標記不同時代事件的交互影響。</label>
+                        <label><input type="checkbox" class="wu-cb" onclick="updateProgress()"> 找出至少 3 個「前期背景做為後期轉變隱藏誘因」的跨章節關鍵節點。</label>
+                    </div>
+                </div>
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第八階段：綜合情境解構（赤壁火攻）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="wu-cb" onclick="updateProgress()"> 將課堂理論、歷史史觀帶入現實案例或實務現象，嘗試進行解讀。</label>
+                        <label><input type="checkbox" class="wu-cb" onclick="updateProgress()"> 練習「一題多解」，嘗試用不同的史觀或分析框架去破解同一個大題。</label>
+                    </div>
+                </div>
+                <div class="sub-phase">
+                    <div class="sub-phase-title">第九階段：終極極速覆盤（群英會盟）</div>
+                    <div class="checkbox-list">
+                        <label><input type="checkbox" class="wu-cb" onclick="updateProgress()"> 製作「考前 30 分鐘終極速讀小卡」，精簡標記核心關鍵字與事件主軸。</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 二、右縱隊：戰略大會戰與軍事沙盤（可自由切換導覽） -->
+        <div class="right-column">
+            
+            <!-- 軍事戰術沙盤（自由切換） -->
+            <div class="card sand-table-card">
+                <div class="sand-table-header">
+                    <span class="sand-table-title"><i class="fa-solid fa-map-location-dot"></i> 軍事戰術動態沙盤（自由切換）</span>
+                    <span style="font-size: 0.8rem; color: #aaa;">點擊下方按鈕，自由推演不同經典戰役</span>
+                </div>
+                
+                <!-- 戰役導覽盤 -->
+                <div class="tab-bar" id="sand-table-tabs">
+                    <!-- JS 動態生成 -->
+                </div>
+
+                <div class="sand-table-map">
+                    <svg viewBox="0 0 600 380" id="sand-map">
+                        <defs>
+                            <!-- 箭頭定義 -->
+                            <marker id="arrow-wei" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#54a0ff" />
+                            </marker>
+                            <marker id="arrow-shu" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#ff6b6b" />
+                            </marker>
+                            <marker id="arrow-wu" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#1dd1a1" />
+                            </marker>
+                            <marker id="arrow-special" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                                <path d="M 0 1 L 10 5 L 0 9 z" fill="#ff9f43" />
+                            </marker>
+                        </defs>
+
+                        <!-- 背景網格 -->
+                        <g opacity="0.05" stroke="#ffffff" stroke-width="1">
+                            <line x1="0" y1="50" x2="600" y2="50" />
+                            <line x1="0" y1="100" x2="600" y2="100" />
+                            <line x1="0" y1="150" x2="600" y2="150" />
+                            <line x1="0" y1="200" x2="600" y2="200" />
+                            <line x1="0" y1="250" x2="600" y2="250" />
+                            <line x1="0" y1="300" x2="600" y2="300" />
+                            <line x1="0" y1="350" x2="600" y2="350" />
+                            <line x1="100" y1="0" x2="100" y2="380" />
+                            <line x1="200" y1="0" x2="200" y2="380" />
+                            <line x1="300" y1="0" x2="300" y2="380" />
+                            <line x1="400" y1="0" x2="400" y2="380" />
+                            <line x1="500" y1="0" x2="500" y2="380" />
+                        </g>
+
+                        <!-- 地理底圖：黃河與長江 -->
+                        <!-- 黃河 -->
+                        <path class="river" d="M 50 80 Q 150 50 220 90 T 380 70 T 550 90" />
+                        <!-- 長江 -->
+                        <path class="river" d="M 50 300 Q 180 280 270 320 T 430 300 T 550 280" />
+
+                        <!-- 勢力區域名稱 (浮水印效果) -->
+                        <text x="270" y="130" class="territory-label" fill="#2e86de">魏</text>
+                        <text x="120" y="270" class="territory-label" fill="#ee5253">蜀</text>
+                        <text x="450" y="320" class="territory-label" fill="#10ac84">吳</text>
+
+                        <!-- 常駐主要城市 -->
+                        <g id="cities">
+                            <circle cx="300" cy="110" r="5" class="city-node" />
+                            <text x="310" y="115" class="city-label">洛陽</text>
+
+                            <circle cx="100" cy="250" r="5" class="city-node" />
+                            <text x="80" y="245" class="city-label">成都</text>
+
+                            <circle cx="480" cy="270" r="5" class="city-node" />
+                            <text x="490" y="275" class="city-label">建業</text>
+
+                            <circle cx="340" cy="260" r="5" class="city-node" />
+                            <text x="350" y="265" class="city-label">荊州</text>
+                        </g>
+
+                        <!-- 動態戰術圖層 -->
+                        <g id="tactical-layer"></g>
+                    </svg>
+                </div>
+
+                <!-- 戰術與備考解析 -->
+                <div class="sand-table-desc-box" id="sand-table-desc">
+                    請點擊上方戰役導覽按鈕推演各戰場局勢與人文歷史學習法隱喻...
+                </div>
+
+                <!-- 圖例 -->
+                <div class="map-legend">
+                    <div class="legend-item"><div class="legend-color" style="background-color: var(--wei-blue);"></div>曹魏/理論觀念</div>
+                    <div class="legend-item"><div class="legend-color" style="background-color: var(--shu-red);"></div>蜀漢/實戰錯題</div>
+                    <div class="legend-item"><div class="legend-color" style="background-color: var(--wu-green);"></div>東吳/聯網整合</div>
+                    <div class="legend-item"><div class="legend-color" style="background-color: var(--accent-orange);"></div>奇襲/關鍵路徑</div>
+                </div>
+            </div>
+
+            <!-- 綜合情境戰鬥框 -->
+            <div class="card scenario-section">
+                <h2><i class="fa-solid fa-swords"></i> 九大戰役・跨章節戰略大會戰</h2>
+                <p style="color: #aaa; font-size: 0.85rem;">期末大考考驗壓力下的歷史思維整合。請配合上方沙盤，指揮行軍突破難關：</p>
+                
+                <div class="battle-box active-border">
+                    <div class="battle-nav">
+                        <span id="battle-index">戰役 1 / 9</span>
+                        <span id="battle-status">戰術推演中</span>
+                    </div>
+                    <div class="battle-title" id="battle-name">載入中...</div>
+                    <div class="battle-desc" id="battle-question">載入中...</div>
+                    
+                    <div id="options-container"></div>
+                    
+                    <div id="feedback"></div>
+                    <button class="next-btn" id="next-btn" onclick="nextQuestion()">進軍下一戰役</button>
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- 三、考前解憂草堂（紓壓專區） -->
+        <div class="stress-relief-section">
+            <h2><i class="fa-solid fa-spa"></i> 軍師草堂・考前避風港與紓壓所</h2>
+            <p style="color: #bbb; font-size: 0.9rem; margin-top: -10px;">「文武之道，一張一弛。臨考切莫過度焦慮，且入草堂靜心，蓄力待發。」</p>
+            
+            <div class="stress-grid">
+                
+                <!-- 1. 電子木魚 (考運功德版) -->
+                <div class="stress-card">
+                    <h3><i class="fa-solid fa-gavel"></i> 電子木魚・考運加持</h3>
+                    <p style="font-size: 0.8rem; color: #aaa; margin: 0;">點擊木魚，淨化雜念，累積期末考功德與考運</p>
+                    
+                    <div class="muyu-container" onclick="tapMuyu(event)">
+                        <div class="muyu-img" id="muyu-pic"></div>
+                        <div class="muyu-stick" id="muyu-stick"></div>
+                    </div>
+                    
+                    <div style="font-size: 0.85rem; color: var(--primary-gold);">
+                        今日功德：<span id="gongde-count" style="font-weight:bold; font-size: 1.1rem;">0</span> | 焦慮感：<span id="anxiety-level" style="font-weight:bold; font-size: 1.1rem; color: var(--calm-teal);">100%</span>
+                    </div>
+                </div>
+
+                <!-- 2. 孔明紓壓錦囊 -->
+                <div class="stress-card">
+                    <h3><i class="fa-solid fa-scroll"></i> 孔明紓壓錦囊</h3>
+                    <p style="font-size: 0.8rem; color: #aaa; margin: 0 0 10px 0;">面臨不同備考焦慮，請挑選拆開一枚妙計錦囊</p>
+                    
+                    <div class="pouch-row">
+                        <button class="pouch-btn" onclick="openPouch('wisdom')">智慧錦囊</button>
+                        <button class="pouch-btn" style="background: linear-gradient(135deg, #1d6e8a 0%, #0d3a4a 100%);" onclick="openPouch('calm')">定心錦囊</button>
+                        <button class="pouch-btn" style="background: linear-gradient(135deg, #1b8a5a 0%, #0c4a30 100%);" onclick="openPouch('courage')">勇氣錦囊</button>
+                    </div>
+                    
+                    <div id="pouch-content">點擊上方按鈕，拆開軍師錦囊以獲取考前開導妙方...</div>
+                </div>
+
+                <!-- 3. 長江吐納・箱式呼吸法 -->
+                <div class="stress-card">
+                    <h3><i class="fa-solid fa-wind"></i> 太極吐納・長江吐納</h3>
+                    <p style="font-size: 0.8rem; color: #aaa; margin: 0 0 10px 0;">配合動態太極光圈，進行 4秒-4秒-4秒 箱式深呼吸</p>
+                    
+                    <div class="breathing-ring-container">
+                        <div class="breathing-ring" id="b-ring">吸氣</div>
+                    </div>
+                    
+                    <div class="breathing-instructions" id="b-txt">跟著光圈引導，平復呼吸頻率...</div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // === JavaScript 進度管理邏輯 ===
+        function updateProgress() {
+            const categories = ['wei', 'shu', 'wu'];
+            let totalChecked = 0;
+            let totalCount = 0;
+
+            categories.forEach(cat => {
+                const checkboxes = document.querySelectorAll(`.${cat}-cb`);
+                const checked = document.querySelectorAll(`.${cat}-cb:checked`);
+                const percent = checkboxes.length ? Math.round((checked.length / checkboxes.length) * 100) : 0;
+                
+                document.getElementById(`${cat}-percent`).innerText = `${percent}%`;
+                document.getElementById(`${cat}-bar`).style.width = `${percent}%`;
+                
+                totalChecked += checked.length;
+                totalCount += checkboxes.length;
+            });
+
+            const totalPercent = Math.round((totalChecked / totalCount) * 100);
+            let rank = "初出茅廬";
+            if (totalPercent >= 15) rank = "偏軍校尉（扎穩馬步）";
+            if (totalPercent >= 35) rank = "中郎將（深諳學理）";
+            if (totalPercent >= 55) rank = "大都督（融會貫通）";
+            if (totalPercent >= 80) rank = "臥龍鳳雛（剖析精準）";
+            if (totalPercent === 100) rank = "天下歸一（期末必拿 A+ 歷史神話！）";
+
+            document.getElementById('strategist-rank').innerText = `${rank} (修煉進度: ${totalPercent}%)`;
+        }
+
+        // === 九大戰役題庫資料與對應沙盤繪圖函式 ===
+        const quizData = [
+            {
+                title: "【第一戰：溫酒斬華雄・速戰爆發與專注力】",
+                question: "華雄在虎牢關前連斬盟軍數將，士氣大挫。關羽主動請纓，曹操熱酒一杯以待。關羽曰：『酒且斟下，某去便來！』言畢提刀上馬，不消片刻斬首華雄，回營時酒尚溫。這就像大考一開始，面對那些高分卻易破解的歷史觀念題，如何快速攻克以奠定勝局？",
+                options: [
+                    { text: "A. 慢條斯理！即使是拿手題也花費多倍時間反覆琢磨文字，直到溫熱的酒都涼透了，把後續申論寫作的節奏完全拖垮。", correct: false, reason: "【潰敗！】過度拖延會消耗大考的黃金時間。面對熟悉常規、考察直觀的基本史實題，應當高度集中意志速戰速決，為後續申論寫作爭取空間。" },
+                    { text: "B. 乾脆俐落！精準提取「曹魏第一階段基礎核心知識」，開啟專注思維，將史實脈絡與定義一氣呵成解答，斬獲基本分且極大提振信心。", correct: true, reason: "【大捷！】漂亮！速斬華雄在於「快、準、狠」。在備考中這代表對常規典型題目擁有極度熟練的條件反射與史學記憶。" }
+                ],
+                sandDesc: "<strong>【戰役一：溫酒斬華雄】學習隱喻：</strong>考場心流發揮！針對基礎核心題、高分典型題進行高速突破。沙盤呈現「虎牢關」關隘與代表「熱酒」的上升蒸氣特效。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <!-- 山脈阻隔 -->
+                        <path d="M 270 50 L 300 150 L 260 250 L 290 350" fill="none" stroke="#444" stroke-width="12" stroke-linecap="round" />
+                        <!-- 虎牢關關隘 -->
+                        <rect x="270" y="170" width="20" height="40" fill="#222" stroke="var(--primary-gold)" stroke-width="2" />
+                        <text x="250" y="150" class="city-label" style="fill:var(--primary-gold); font-weight:bold;">虎牢關</text>
+                        
+                        <!-- 董卓軍(守) -->
+                        <circle cx="230" cy="190" r="5" fill="#ee5253" />
+                        <text x="180" y="195" class="city-label" style="fill:#ff6b6b;">華雄寨</text>
+                        
+                        <!-- 關羽快襲線 -->
+                        <path d="M 360 190 L 255 190" class="march-line special-march" marker-end="url(#arrow-special)" style="animation-duration: 0.6s;" />
+                        <circle cx="360" cy="190" r="5" fill="#54a0ff" />
+                        <text x="375" y="195" class="city-label" style="fill:#54a0ff;">曹操大營(備酒)</text>
+                        
+                        <!-- 蒸氣效果(象徵熱酒) -->
+                        <path d="M 370 170 Q 375 160 370 150" fill="none" stroke="#ff9f43" stroke-width="1.5" opacity="0.8" />
+                    `;
+                }
+            },
+            {
+                title: "【第二戰：官渡之戰・資源極限與關鍵奇襲】",
+                question: "曹操與袁紹在官渡對峙，曹軍糧草用盡，將士疲憊，正面迎敵必敗。這正如期末考範圍大到讀不完，時間極度匱乏。此時許攸獻計，提議放棄防守全面，孤注一擲奇襲袁紹的糧倉「烏巢」。你該如何決定？",
+                options: [
+                    { text: "A. 拒絕風險！寧可死守。堅持把每一章節、每一頁都平均分配時間讀完，即便最後因為時間不夠，每章都只讀到皮毛而無一精通。", correct: false, reason: "【潰敗！】平均分配資源給巨大的範圍，會導致所有章節都不精通，如同袁紹各處派兵卻處處薄弱，大考必敗。" },
+                    { text: "B. 戰略聚焦！採納計謀。利用「帕雷托法則（80/20 法則）」，即 80% 的分數通常來自 20% 的核心精華，透過考古題鎖定核心論點（烏巢）集中火力，放棄其餘邊角概念。", correct: true, reason: "【大捷！】精準打擊！在極端時間壓力下，抓出高配分的核心概念橫向融會貫通，是逆轉勝的唯一解。" }
+                ],
+                sandDesc: "<strong>【戰役二：官渡之戰】學習隱喻：</strong>資源配置！利用 80/20 法則，在極端時間壓力下主攻核心考點。沙盤顯示曹操奇襲「烏巢」的關鍵行軍路線。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <!-- 袁紹軍營與行軍線 -->
+                        <circle cx="350" cy="50" r="4" fill="#f1c40f" />
+                        <text x="360" y="55" class="city-label">鄴城 (袁紹大本營)</text>
+                        <path d="M 350 50 Q 360 85 365 110" class="march-line" stroke="#f1c40f" style="stroke-dasharray: 8,4;" />
+
+                        <!-- 曹操軍營 -->
+                        <circle cx="340" cy="140" r="4" fill="#54a0ff" />
+                        <text x="290" y="145" class="city-label">官渡 (曹操大寨)</text>
+                        
+                        <!-- 衝突點 -->
+                        <circle cx="365" cy="120" r="8" class="clash-point" />
+                        <text x="380" y="125" class="city-label" style="fill:#ff2a2a; font-weight:bold;">官渡主戰場</text>
+
+                        <!-- 烏巢與奇襲路線 -->
+                        <circle cx="410" cy="80" r="6" fill="none" stroke="#ff9f43" stroke-width="2" class="clash-point" style="animation-duration: 0.8s;" />
+                        <text x="425" y="85" class="city-label" style="fill:#ff9f43; font-weight:bold;">烏巢 (袁軍糧倉)</text>
+                        <path d="M 340 140 Q 380 120 410 80" class="march-line special-march" marker-end="url(#arrow-special)" />
+                    `;
+                }
+            },
+            {
+                title: "【第三戰：赤壁之戰・跨章節隱藏條件整合】",
+                question: "周瑜決定使用火攻破解曹操聯軍的連環船，但此時正值嚴冬，天公不作美，天天吹西北風，若點火反會燒毀東吳自家水寨。這就像期末考遇到了「題目表層給的歷史陳述，跟基礎學術假設完全相反」的跨章節陷阱題。你該如何處理？",
+                options: [
+                    { text: "A. 硬套公式化的套版論點！不管題目隱藏的背景限制，既然平時小考（曹魏防線）都是這樣答題，直接把套版論點帶進去寫就對了。", correct: false, reason: "【潰敗！】掉入題目陷阱！教授最喜歡在「適用前提」設下歷史環境限制，不看條件盲目套用刻板論述，直接丟大分。" },
+                    { text: "B. 縱向聯想！結合歷史背景與地理、社會等多章節知識，梳理出歷史發展轉換的規律，靜待「冬至東南風」這項隱藏變數明朗時，再動用核心理論解析。", correct: true, reason: "【大捷！】漂亮！大考整合題考的就是「條件轉換與觀點彈性」。看清題目背後的底層歷史/邏輯假設，才能在變局中破題。" }
+                ],
+                sandDesc: "<strong>【戰役三：赤壁之戰】學習隱喻：</strong>跨章節條件整合！當表面史料發生變化時，找出隱藏的因果轉變變數（東南風）。沙盤展現東南強風火攻烏林的行軍軌跡。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <!-- 曹操水寨 -->
+                        <circle cx="340" cy="285" r="4" fill="#54a0ff" />
+                        <text x="270" y="285" class="city-label">烏林 (曹操水寨)</text>
+
+                        <!-- 東吳軍寨 -->
+                        <circle cx="380" cy="325" r="4" fill="#1dd1a1" />
+                        <text x="395" y="335" class="city-label">赤壁 (周瑜大寨)</text>
+
+                        <!-- 衝突與火攻點 -->
+                        <circle cx="360" cy="305" r="8" class="clash-point" />
+                        <text x="325" y="315" class="city-label" style="fill:#ff6b6b; font-weight:bold;">赤壁火攻衝突點</text>
+
+                        <!-- 風向箭頭 (東南風) -->
+                        <path d="M 450 360 L 380 270" class="march-line special-march" marker-end="url(#arrow-special)" style="stroke-width:4;" />
+                        <text x="430" y="330" class="city-label" style="fill:#ff9f43; font-weight:bold;">冬至東南風 (關鍵變數)</text>
+                    `;
+                }
+            },
+            {
+                title: "【第四戰：長坂坡之戰・高壓力下的知識提取】",
+                question: "曹操大軍黑壓壓殺來，趙雲在亂軍之中與主子走散，身邊全是敵軍，心理壓力極大。這就像你一進考場打開試卷，發現前三題全是「沒看過的跨章節創新思辨題」，腦袋瞬間一片空白，心跳加速。此時你該如何應對？",
+                options: [
+                    { text: "A. 陷入恐慌！在長坂坡橫衝直撞，心慌意亂地在紙上亂寫一通，甚至在某一題卡死 30 分鐘，誓死不退。", correct: false, reason: "【潰敗！】恐慌會癱瘓你的大腦，讓你連原本會寫的歷史觀念都忘光。在單一難題上虛耗寶貴時間是考場大忌。" },
+                    { text: "B. 單騎救主！深呼吸冷靜下來，明白這是教授的「心理戰」。先跳過這三題，去後方尋找能快速作答的基本題，藉由寫對基本題找回節奏與記憶，再回頭解構難題。", correct: true, reason: "【大捷！】考場心理學的精髓！先拿基本分能活化大腦的記憶提取網絡，等心情平穩後，原本卡住的跨章節聯想與歷史脈絡往往會自然湧現。" }
+                ],
+                sandDesc: "<strong>【戰役四：長坂坡之戰】學習隱喻：</strong>考場心理解壓！面對陌生難題包圍，先跳過並爭取基本盤，再回頭單騎突圍。沙盤展示趙雲在曹軍重圍中逆行突擊的路徑。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <!-- 曹操大軍包圍圈 -->
+                        <path d="M 330 200 L 330 240" class="march-line wei-march" marker-end="url(#arrow-wei)" />
+                        <path d="M 370 200 L 370 240" class="march-line wei-march" marker-end="url(#arrow-wei)" />
+                        <text x="380" y="210" class="city-label" style="fill:#54a0ff;">曹軍五千虎豹騎</text>
+
+                        <!-- 劉備大軍撤退路線 -->
+                        <path d="M 340 210 Q 350 240 350 280" class="march-line shu-march" />
+
+                        <!-- 趙雲逆行線 -->
+                        <path d="M 350 250 Q 320 230 350 220" class="march-line special-march" marker-end="url(#arrow-special)" style="animation-duration: 0.8s;" />
+                        <circle cx="350" cy="225" r="5" fill="#ff9f43" class="clash-point" />
+                        <text x="365" y="230" class="city-label" style="fill:#ff9f43; font-weight:bold;">趙雲長坂橋救主</text>
+                    `;
+                }
+            },
+            {
+                title: "【第五戰：空城計・資訊不對稱與錯題心理】",
+                question: "司馬懿率十五萬大軍大舉進攻西城，諸葛亮城內毫無兵力。此時諸葛亮大開城門，在城樓上焚香操琴。司馬懿深知諸葛亮「一生謹慎，不曾冒險」，懷疑城內有伏兵，最終退兵。這如何應用在期末考的「觀念是非題與史實細節題」中？",
+                options: [
+                    { text: "A. 以為題目在使空城計，把所有「看起來很直接、直白」的觀念題都想得超級複雜，自己嚇自己，改了三次答案最後把對的改錯。", correct: false, reason: "【潰敗！】過度焦慮導致過度解讀。是非題考的是基本觀念與史料的定力，自己亂了陣腳反而中了出題老師的圈套。" },
+                    { text: "B. 運用「錯題覆盤筆記（蜀漢防線）」，回想出題教授平時設陷阱的習慣（如喜歡玩文字遊戲或斷章取義），用精準的核心定義去檢驗題目，不隨題目敘述起舞。", correct: true, reason: "【大捷！】知己知彼！利用平時覆盤掌握的「教授出題心理學」，以不變的基本歷史事實與邏輯應萬變，自然能看穿題目的虛實。" }
+                ],
+                sandDesc: "<strong>【戰役五：空城計】學習隱喻：</strong>看穿考題陷阱！不因焦慮而對簡單題目過度解讀。沙盤描繪出司馬懿軍隊逼近西城後，因疑心而被迫撤退的動態軌跡。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <!-- 西城要塞 -->
+                        <rect x="230" y="180" width="40" height="30" fill="none" stroke="#ff6b6b" stroke-width="2" />
+                        <text x="235" y="200" class="city-label" style="fill:#ff6b6b; font-weight:bold;">西城</text>
+
+                        <!-- 司馬懿大軍進逼線 -->
+                        <path d="M 350 195 L 285 195" class="march-line wei-march" marker-end="url(#arrow-wei)" />
+                        <text x="300" y="185" class="city-label" style="fill:#54a0ff;">司馬軍大舉進逼</text>
+
+                        <!-- 撤退路線 -->
+                        <path d="M 285 210 Q 320 230 370 215" class="march-line special-march" marker-end="url(#arrow-special)" style="stroke-dasharray: 4,4; stroke-width:2;" />
+                        <text x="300" y="240" class="city-label" style="fill:#ff9f43;">疑兵之計退兵</text>
+                    `;
+                }
+            },
+            {
+                title: "【第六戰：臨江八陣圖・結構化思維網網相連】",
+                question: "陸遜在夷陵之戰大破蜀軍後，乘勝追擊至夔關。忽見長江岸邊亂石堆列、殺氣橫空。入之，狂風大作，飛沙走石，竟被孔明事前佈置的「八陣圖」死死困住。大範圍考試內容龐大，若知識點無結構化整理，是否也會像陸遜一樣深陷知識迷陣中？",
+                options: [
+                    { text: "A. 亂拳打死老師傅！不需要任何歷史思維導圖或脈絡框架，只憑單向的記憶硬塞，看到什麼背什麼，即便最後各章知識在腦袋裡打架成一團亂石堆。", correct: false, reason: "【潰敗！】沒有聯絡網絡與結構的知識，就像進了八陣圖的陸遜追兵，看似滿腦子有讀，一上考場卻相互干擾、無法提取，被亂石迷死。" },
+                    { text: "B. 乾坤掌握！建構「東吳第七階段跨章節思維導圖」，將各章核心主軸化為歷史脈絡的中樞，使事件之間有精密的邏輯聯想，答題申論時引用核心論點便能進退有據。", correct: true, reason: "【大捷！】高能解鎖！結構化思維能讓你遇到考題時，瞬間透過邏輯通路調用對應理論與史實論證，這也是走出期末大範圍迷障的最高智慧。" }
+                ],
+                sandDesc: "<strong>【戰役六：臨江八陣圖】學習隱喻：</strong>建立結構化思維導圖！使知識脈絡分明，不致在考場思維迷路。沙盤中呈現出圍繞核心陣眼分布的八卦陣石堆與受困的吳軍位置。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <!-- 江水流經 -->
+                        <path d="M 50 190 Q 200 150 300 210 T 550 180" class="river" />
+                        <text x="250" y="145" class="city-label" style="fill:var(--primary-gold); font-weight:bold;">臨江八陣圖</text>
+                        
+                        <!-- 魚腹浦八卦陣列 -->
+                        <g fill="none" stroke="#666" stroke-width="1.5">
+                            <circle cx="300" cy="200" r="30" stroke-dasharray="5,5" />
+                            <circle cx="300" cy="200" r="50" stroke-dasharray="8,4" />
+                            <!-- 陣眼石塊 -->
+                            <rect x="285" y="185" width="8" height="8" fill="#555" />
+                            <rect x="310" y="185" width="8" height="8" fill="#555" />
+                            <rect x="285" y="210" width="8" height="8" fill="#555" />
+                            <rect x="310" y="210" width="8" height="8" fill="#555" />
+                            <rect x="300" y="165" width="8" height="8" fill="#555" />
+                            <rect x="300" y="230" width="8" height="8" fill="#555" />
+                        </g>
+
+                        <!-- 陸遜困在陣中 -->
+                        <circle cx="295" cy="195" r="8" class="clash-point" />
+                        <text x="315" y="160" class="city-label" style="fill:#1dd1a1;">陸遜追兵(困)</text>
+                    `;
+                }
+            },
+            {
+                title: "【第七戰：夷陵之戰・跨章節的連鎖潰敗】",
+                question: "劉備為替關羽報仇，大舉進攻東吳. 因為天氣炎熱，劉備下令將安營紮寨的方式改為「依山傍水，連營七百里」以避暑。陸遜見狀，指出這嚴重違反了基本防禦原則，直接發動火攻，蜀軍連營全線覆沒。這對跨章節學習有何啟示？",
+                options: [
+                    { text: "A. 每個章節是獨立的。只要後期章節（避暑）的答題論述在當下看來合理就好，不用管這會不會違反前期章節（基礎史實與大前提）的基本設定。", correct: false, reason: "【潰敗！】期末考是整合戰！如果你在答後面章節的進階應用時，遺忘了前面章節的底層歷史假設，寫出的論述就會像連營七百里一樣漏洞百出，被火攻一觸即潰。" },
+                    { text: "B. 隨時注意連鎖反應。在分析後續章節的高階史觀或歷史事件變遷時，必須隨時回頭檢視是否滿足前面章節的「底層歷史大前提」，建構互相支撐的論證網絡。", correct: true, reason: "【大捷！】跨章節整合的最高境界。人文知識不是孤島，後期的複雜歷史演進都是由前期的基礎架構疊加而來，保持論述網絡的完整性才能無懈可擊。" }
+                ],
+                sandDesc: "<strong>【戰役七：夷陵之戰】學習隱喻：</strong>避免前後章節概念脫節與邏輯斷裂。沙盤中展示了劉備軍隊沿江「連營七百里」的致命線條與東吳火攻進擊線。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <!-- 蜀漢連營七百里 -->
+                        <path d="M 220 310 Q 250 290 280 300 T 340 295" fill="none" stroke="#ff6b6b" stroke-width="4" stroke-dasharray="10, 5" />
+                        <text x="210" y="280" class="city-label" style="fill:#ff6b6b; font-weight:bold;">蜀軍連營七百里</text>
+
+                        <!-- 吳軍火攻點 -->
+                        <circle cx="280" cy="300" r="8" class="clash-point" />
+                        <circle cx="320" cy="295" r="8" class="clash-point" style="animation-delay: 0.3s;" />
+
+                        <!-- 東吳奇襲火攻線 -->
+                        <path d="M 370 310 L 330 300" class="march-line wu-march" marker-end="url(#arrow-wu)" />
+                    `;
+                }
+            },
+            {
+                title: "【第八戰：七擒孟獲・反覆演練直到完全消化】",
+                question: "孔明為安穩蜀漢後方，親率大軍南征蠻荒。蠻王孟獲驍勇不服。孔明若欲殺孟獲甚易，但為達致「心服口服、永不反叛」，孔明實行了『七擒七縱』之策，放了抓，抓了放，歷經數次血汗交戰，終使孟獲心服叩首。這如何對應大考中的「觀念死角與錯題」？",
+                options: [
+                    { text: "A. 點到為止！錯題看過一眼解析、當下以為懂了就丟在一旁，不再複習與重寫，深信自己考場上一定能「臨場發揮」寫出好論述。", correct: false, reason: "【潰敗！】常錯的觀念與史實細節就像野性難馴的孟獲，只看一次解析，隔天考場換個情境，它依然會再度反叛，讓你丟分。" },
+                    { text: "B. 七擒七縱！運用「蜀漢第五階段錯題特訓」，對高頻錯題與盲區觀念進行「連續多次變形題或情境重寫演練」，直到閉著眼睛也能識破考題套路、將其徹底馴服。", correct: true, reason: "【大捷！】備考的核心秘訣！真正的學霸不一定刷題最多，但對錯過的觀念與大題絕對實行「七擒七縱」，反覆榨乾錯題價值直到它完全歸順！" }
+                ],
+                sandDesc: "<strong>【戰役八：七擒孟獲】學習隱喻：</strong>錯題「七擒七縱」！反覆演練與覆盤常錯盲區，直到徹底將其化為本能。沙盤描繪了孔明與孟獲在瀘水兩岸反覆交鋒拉鋸的閉環線。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <!-- 南荒大川 (瀘水) -->
+                        <path d="M 100 340 Q 250 270 450 320" class="river" stroke="#1d4d3f" />
+                        <text x="280" y="295" class="city-label" style="fill:#1dd1a1;">瀘水 (南荒大川)</text>
+                        
+                        <!-- 蜀大軍營與孟獲蠻營 -->
+                        <circle cx="200" cy="150" r="5" fill="#ff6b6b" />
+                        <text x="150" y="145" class="city-label" style="fill:#ff6b6b;">孔明大寨</text>
+                        <circle cx="340" cy="230" r="5" fill="#ff9f43" />
+                        <text x="355" y="235" class="city-label" style="fill:#ff9f43;">孟獲蠻營</text>
+                        
+                        <!-- 七擒七縱循環線 -->
+                        <path d="M 200 150 Q 280 130 340 230" class="march-line special-march" marker-end="url(#arrow-special)" style="animation-duration: 2s;" />
+                        <path d="M 340 230 Q 240 260 200 150" class="march-line special-march" stroke-dasharray="4,4" style="stroke:#1dd1a1; animation-duration: 2.2s; animation-direction: reverse;" />
+                        <text x="250" y="185" class="city-label" style="fill:var(--primary-gold); font-size:11px;">七擒七縱 (反覆交鋒)</text>
+                    `;
+                }
+            },
+            {
+                title: "【第九戰：出師表・考前 30 分鐘的終極總結】",
+                question: "諸葛亮即將北伐，臨行前寫下《出師表》，將宮中與府中之事安排得井井有條，叮囑後主「親賢臣，遠小人」。這如同考前最後 30 分鐘，身處高度緊繃狀態，你該如何做最後的交代與覆盤？",
+                options: [
+                    { text: "A. 臨陣磨槍！抓起整本厚重的歷史課文或講義從第一頁瘋狂往後翻，試圖在最後一刻把所有細節再硬塞進大腦裡。", correct: false, reason: "【潰敗！】這會導致大腦訊息過載（Overload），產生嚴重的干擾效應，反而讓原本記得很熟的章節觀念在開考時混淆。" },
+                    { text: "B. 定海神針！放下大本課本，只看自製的「考前 30 分鐘終極小卡（東吳戰略）」，快速掃視核心關鍵字與「常錯觀念警示」，閉眼進行腦內思維導圖的檢索。", correct: true, reason: "【大捷！】此乃萬全之策。考前關鍵是穩定心神與「活化檢索路徑」。看著精簡的網絡圖，能讓大腦在開考時以最快速度提取正確章節的知識！" }
+                ],
+                sandDesc: "<strong>【戰役九：出師表】學習隱喻：</strong>考前極速檢索與心態沉澱。沙盤描繪了以漢中為大本營，向北進發出川的五路北伐宏大路線。",
+                renderSandTable: function(layer) {
+                    layer.innerHTML = `
+                        <!-- 漢中大本營 -->
+                        <circle cx="200" cy="210" r="5" fill="#ff6b6b" />
+                        <text x="170" y="200" class="city-label" style="fill:#ff6b6b; font-weight:bold;">漢中大本營</text>
+
+                        <!-- 五路北伐路線 -->
+                        <path d="M 200 210 Q 180 170 190 140" class="march-line shu-march" marker-end="url(#arrow-shu)" />
+                        <path d="M 200 210 Q 210 170 230 140" class="march-line shu-march" marker-end="url(#arrow-shu)" />
+                        <path d="M 200 210 Q 240 180 270 160" class="march-line shu-march" marker-end="url(#arrow-shu)" />
+                        <text x="235" y="180" class="city-label" style="fill:#ff6b6b;">出川北伐路線</text>
+
+                        <!-- 曹魏防禦線 -->
+                        <rect x="170" y="125" width="130" height="15" fill="none" stroke="#54a0ff" stroke-width="2" stroke-dasharray="5,5" />
+                        <text x="195" y="120" class="city-label" style="fill:#54a0ff; font-weight:bold;">祁山/長安防線</text>
+                    `;
+                }
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+
+        // === 初始化自由切換沙盤導覽列 ===
+        function initSandTableTabs() {
+            const tabsContainer = document.getElementById('sand-table-tabs');
+            tabsContainer.innerHTML = '';
+            
+            quizData.forEach((quiz, index) => {
+                const btn = document.createElement('button');
+                btn.className = `tab-btn ${index === 0 ? 'active' : ''}`;
+                btn.innerText = `戰役 ${index + 1}`;
+                btn.onclick = () => selectSandTableTab(index);
+                tabsContainer.appendChild(btn);
+            });
+            // 預設載入第一戰役沙盤
+            selectSandTableTab(0);
+        }
+
+        // === 點擊導覽列切換沙盤 ===
+        function selectSandTableTab(index) {
+            // 更新按鈕高亮狀態
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach((btn, idx) => {
+                if (idx === index) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // 繪製對應沙盤
+            const tacticalLayer = document.getElementById('tactical-layer');
+            tacticalLayer.innerHTML = ''; 
+            if (quizData[index] && quizData[index].renderSandTable) {
+                quizData[index].renderSandTable(tacticalLayer);
+            }
+
+            // 更新戰術與備考解析文字
+            const descBox = document.getElementById('sand-table-desc');
+            descBox.innerHTML = quizData[index].sandDesc || '無沙盤說明';
+        }
+
+        // === 載入當前戰役題目與同步切換沙盤 ===
+        function loadQuestion() {
+            const currentQuiz = quizData[currentQuestionIndex];
+            
+            // 載入題卡文字
+            document.getElementById('battle-index').innerText = `戰役 ${currentQuestionIndex + 1} / ${quizData.length}`;
+            document.getElementById('battle-name').innerText = currentQuiz.title;
+            document.getElementById('battle-question').innerText = currentQuiz.question;
+            
+            // 載入選項按鈕
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            
+            currentQuiz.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.innerText = option.text;
+                button.onclick = () => checkAnswer(option, button);
+                optionsContainer.appendChild(button);
+            });
+
+            // 重置反饋和下一步按鈕
+            document.getElementById('feedback').style.display = 'none';
+            document.getElementById('next-btn').style.display = 'none';
+            document.querySelector('.battle-box').classList.add('active-border');
+
+            // === 同步切換沙盤導覽高亮與繪圖 ===
+            selectSandTableTab(currentQuestionIndex);
+        }
+
+        function checkAnswer(option, selectedButton) {
+            const feedbackDiv = document.getElementById('feedback');
+            feedbackDiv.style.display = 'block';
+            
+            // 鎖定其他按鈕
+            const buttons = document.querySelectorAll('.option-btn');
+            buttons.forEach(btn => btn.disabled = true);
+
+            if (option.correct) {
+                feedbackDiv.className = "success";
+                feedbackDiv.innerHTML = `<i class="fa-solid fa-circle-check"></i> <strong>【大捷！】</strong>${option.reason}`;
+                // 每答對一題，稍微降低點焦慮值
+                modifyAnxiety(-15);
+            } else {
+                feedbackDiv.className = "failure";
+                feedbackDiv.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> <strong>【潰敗！】</strong>${option.reason}`;
+                modifyAnxiety(10);
+            }
+
+            document.getElementById('next-btn').style.display = 'block';
+            document.querySelector('.battle-box').classList.remove('active-border');
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                // 九大戰役通關後之終局沙盤
+                document.getElementById('battle-index').innerText = "戰役全數完成";
+                document.getElementById('battle-status').innerText = "天下太平";
+                document.getElementById('battle-name').innerText = "【三國歸晉・學業大成】";
+                document.getElementById('battle-question').innerText = "恭喜軍師！您已成功推演完九大跨章節整合戰役。從速戰突破（溫酒）、資源分配（官渡）、思維結構（八陣圖）到循環覆盤（七擒），您的大腦已經歷了一次全能人文史觀特訓。攜帶此等韜略，奔赴戰場，必能制霸期末！";
+                document.getElementById('options-container').innerHTML = '';
+                document.getElementById('feedback').style.display = 'none';
+                document.getElementById('next-btn').style.display = 'none';
+
+                // 終局沙盤動態
+                const tacticalLayer = document.getElementById('tactical-layer');
+                tacticalLayer.innerHTML = `
+                    <circle cx="300" cy="190" r="15" fill="none" stroke="var(--primary-gold)" stroke-width="3" class="clash-point" />
+                    <text x="210" y="240" class="city-label" style="fill:var(--primary-gold); font-size:16px; font-weight:bold;">天下歸一！期末 A+ 制霸！</text>
+                    <!-- 三分歸晉箭頭 -->
+                    <path d="M 120 250 L 280 200" class="march-line shu-march" marker-end="url(#arrow-shu)" />
+                    <path d="M 450 300 L 320 200" class="march-line wu-march" marker-end="url(#arrow-wu)" />
+                    <path d="M 300 110 L 300 170" class="march-line wei-march" marker-end="url(#arrow-wei)" />
+                `;
+                document.getElementById('sand-table-desc').innerHTML = "<strong>【終局：三分歸晉】</strong>恭喜你完成全部歷史戰役！天下終歸統一，象徵你的知識網絡已無懈可擊，直指期末考 A+ 寶座！";
+            }
+        }
+
+        // ==========================================
+        // === 考前解憂草堂：紓壓模組 JS 控制系統 ===
+        // ==========================================
+        
+        let meritCount = 0;
+        let anxietyLevel = 100;
+
+        // 音訊合成器：使用 Web Audio API 生成逼真的木魚撞擊聲
+        function playMuyuSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(450, ctx.currentTime);
+                // 模擬敲擊後音調微降
+                osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.12);
+                
+                gain.gain.setValueAtTime(0.6, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+                
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                
+                osc.start();
+                osc.stop(ctx.currentTime + 0.12);
+            } catch (e) {
+                // 阻擋某些瀏覽器尚未啟用的音訊安全性警告
+            }
+        }
+
+        // 敲木魚動作
+        function tapMuyu(event) {
+            playMuyuSound();
+
+            // 1. 木魚縮放與擊槌動畫
+            const muyu = document.getElementById('muyu-pic');
+            const stick = document.getElementById('muyu-stick');
+            
+            muyu.style.transform = "scale(0.92)";
+            stick.style.transform = "rotate(10deg)";
+            setTimeout(() => {
+                muyu.style.transform = "scale(1)";
+                stick.style.transform = "rotate(30deg)";
+            }, 60);
+
+            // 2. 累加功德、消解焦慮
+            meritCount++;
+            document.getElementById('gongde-count').innerText = meritCount;
+            modifyAnxiety(-2);
+
+            // 3. 創建漂浮文字
+            const container = event.currentTarget;
+            const rect = container.getBoundingClientRect();
+            // 隨機抽選紓壓標籤
+            const merits = ["功德 +1", "考運 +1", "焦慮 -5", "記憶力 +10%", "A+ 能量+1", "心境澄清", "歐氣爆發", "不掛科Buff!"];
+            const randomText = merits[Math.floor(Math.random() * merits.length)];
+            
+            const floatLabel = document.createElement('div');
+            floatLabel.className = 'float-text';
+            floatLabel.innerText = randomText;
+            
+            // 設定生成位置為滑鼠點擊處
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            floatLabel.style.left = `${x}px`;
+            floatLabel.style.top = `${y}px`;
+            
+            container.appendChild(floatLabel);
+            
+            // 完畢後刪除元素
+            setTimeout(() => {
+                floatLabel.remove();
+            }, 800);
+        }
+
+        // 焦慮調節器
+        function modifyAnxiety(value) {
+            anxietyLevel += value;
+            if (anxietyLevel > 100) anxietyLevel = 100;
+            if (anxietyLevel < 0) anxietyLevel = 0;
+            document.getElementById('anxiety-level').innerText = `${anxietyLevel}%`;
+            
+            const levelSpan = document.getElementById('anxiety-level');
+            if (anxietyLevel < 40) {
+                levelSpan.style.color = '#2ecc71'; // 綠色：極放鬆
+            } else if (anxietyLevel < 75) {
+                levelSpan.style.color = 'var(--calm-teal)'; // 青色：平穩
+            } else {
+                levelSpan.style.color = 'var(--shu-red)'; // 紅色：緊繃
+            }
+        }
+
+        // 孔明錦囊打開事件
+        const pouchTexts = {
+            wisdom: "<strong>【智慧錦囊・格物致知】</strong><br>『欲速則不達，見小利則大事不成。』面對期末堆積如山的歷史章節，不要妄想一天速成。試著把知識點拆解成 25 分鐘的番茄鐘，穩穩吃下一個史實因果是一個。大腦在專注後的休息期會進行自主整理，睡前看一看思維導圖，睡眠時大腦會幫你建構完整的連結網。相信你的累積！",
+            calm: "<strong>【定心錦囊・空谷幽蘭】</strong><br>『非寧靜無以致遠，非淡泊無以明志。』此時感到焦慮、心跳加速是非常健康的生理反應，這是大腦在幫你調動應激資源。請做三次深呼吸，將注意力拉回當下的「一呼一吸」或眼前的「這一行字」。考場上若遇到卡住的難題，請在心中默念三遍：『這只是司馬懿的空城計，先拿基本分便是！』",
+            courage: "<strong>【勇氣錦囊・孤膽突圍】</strong><br>『黃沙百戰穿金甲，不破樓蘭終不還。』想像你就是百萬軍中單騎救主的趙子龍，哪怕考卷的防線再嚴密，你手中亦有平時小考與錯題覆盤累積下來的『思維長槍』。別被未知的考法嚇倒，遇到沒看過的申論，就用最基礎的概念與大前提去拆解。你已經準備得足夠充分，只管提兵突圍，無所畏懼！"
+        };
+
+        function openPouch(type) {
+            const contentBox = document.getElementById('pouch-content');
+            contentBox.innerHTML = pouchTexts[type];
+            // 播放一聲木魚音效作為反饋
+            playMuyuSound();
+            modifyAnxiety(-5);
+        }
+
+        // 箱式呼吸吐納引導系統
+        let breathState = 0; // 0: 吸氣, 1: 憋氣, 2: 呼氣
+        const ring = document.getElementById('b-ring');
+        const txt = document.getElementById('b-txt');
+
+        function runBreathing() {
+            if (breathState === 0) {
+                // 吸氣 (Ring 放大)
+                ring.style.transform = "scale(1.4)";
+                ring.style.backgroundColor = "rgba(0, 210, 243, 0.35)";
+                ring.innerText = "吸氣";
+                txt.innerText = "緩慢用鼻吸氣，感受能量充盈大腦... (4秒)";
+                breathState = 1;
+            } else if (breathState === 1) {
+                // 憋氣 (Ring 保持)
+                ring.innerText = "持氣";
+                ring.style.backgroundColor = "rgba(212, 175, 55, 0.25)";
+                txt.innerText = "閉氣沉氣，讓身心雜念沉澱下來... (4秒)";
+                breathState = 2;
+            } else if (breathState === 2) {
+                // 呼氣 (Ring 縮小)
+                ring.style.transform = "scale(0.85)";
+                ring.style.backgroundColor = "rgba(0, 210, 243, 0.1)";
+                ring.innerText = "呼氣";
+                txt.innerText = "用口緩緩吐氣，將所有焦慮與疲憊排出... (4秒)";
+                modifyAnxiety(-3);
+                breathState = 0;
+            }
+        }
+
+        // 每4秒切換一次呼吸狀態
+        setInterval(runBreathing, 4000);
+
+        // 初始化
+        window.onload = function() {
+            initSandTableTabs();
+            loadQuestion();
+            // 啟動首次呼吸提示
+            runBreathing();
+        };
+    </script>
+</body>
+</html>
